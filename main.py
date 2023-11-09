@@ -1,3 +1,6 @@
+
+# https://github.com/timesler/facenet-pytorch
+
 import cv2
 from facenet_pytorch import MTCNN, InceptionResnetV1
 from PIL import Image
