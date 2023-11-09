@@ -18,7 +18,7 @@ if img.mode != 'RGB':
     img = img.convert('RGB')
 
 # Get cropped and prewhitened image tensor
-boxes, _ = mtcnn.detect(img) #, save_path='./images/test_result.jpg'
+boxes, _ = mtcnn.detect(img)
 
 # Create a copy of the original image to draw the boxes on
 draw_img = img.copy()
@@ -31,8 +31,10 @@ thickness = 1
 # Draw the boxes
 if boxes is not None:
     for box in boxes:
+        # Instead of draw.rectangle, simply apply mosaic filter. 
+        # box.toList() contains the coordinates of the box
         draw.rectangle(box.tolist(), outline=box_color, width=thickness)
 
-# Save or display the image
+# Save and display the image
 draw_img.save('./images/test_with_boxes.jpg')
 draw_img.show()
