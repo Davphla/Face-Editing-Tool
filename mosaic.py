@@ -28,13 +28,14 @@ def apply_mosaic_effect(image):
     return image
 
 def apply_mosaic_section(image, x1, y1, x2, y2):
-    width, height = int(x2 - x1), int(y2 - y1)
-    for x in range(x1, width, TILE_SIZE):
-        for y in range(y1, height, TILE_SIZE):
-            apply_tile_average(image, x + x1, y + y1, TILE_SIZE)
+    #width, height = int(x2 - x1), int(y2 - y1)
+    for x in range(x1, x2, TILE_SIZE):
+        for y in range(y1, y2, TILE_SIZE):
+            apply_tile_average(image, x, y, TILE_SIZE)
+    print("done")
     return image
 
 
 #mosaic_image = apply_mosaic_section(img, 0, 0, 1000, 1000)
 #mosaic_image.save(SAVE_DIRECTORY + 'mosaic.jpg')
-print("good")
+#print("good")
