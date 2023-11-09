@@ -4,7 +4,7 @@ IMAGE_TO_PROCESS = 'assets/car.jpg'
 SAVE_DIRECTORY = 'results/'
 TILE_SIZE = 20
 
-img = Image.open(IMAGE_TO_PROCESS)
+#img = Image.open(IMAGE_TO_PROCESS)
 
 
 def get_average_rgb(tile):
@@ -35,6 +35,6 @@ def apply_mosaic_section(image, x1, y1, x2, y2):
     return image
 
 
-mosaic_image = apply_mosaic_section(img, 0, 0, 1000, 1000)
-mosaic_image.save(SAVE_DIRECTORY + 'mosaic.jpg')
+#mosaic_image = apply_mosaic_section(img, 0, 0, 1000, 1000)
+#mosaic_image.save(SAVE_DIRECTORY + 'mosaic.jpg')
 print("good")
