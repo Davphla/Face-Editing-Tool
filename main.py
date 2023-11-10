@@ -1,37 +1,38 @@
-# https://github.com/timesler/facenet-pytorch
-
+# Importing necessary libraries
 from facenet_pytorch import MTCNN, InceptionResnetV1
 from PIL import Image, ImageDraw
 from mosaic import apply_mosaic_section
-from config import BOX_COLOR, THICKNESS
+from config import BOX_COLOR, THICKNESS, IMAGES_DIR, TEST_IMAGE, RESULT_IMAGE
 
-# If required, create a face detection pipeline using MTCNN:
+# Initialize MTCNN and InceptionResnetV1
 mtcnn = MTCNN(image_size=1024, margin=0)
-
-# Create an inception resnet (in eval mode):
 resnet = InceptionResnetV1(pretrained='vggface2').eval()
 
+def process_image(image_path):
+    # Open the image file
+    img = Image.open(image_path)
 
-img = Image.open('./images/test_big.jpg')
+    # Convert the image to RGB if it's not already in that mode
+    if img.mode != 'RGB':
+        img = img.convert('RGB')
 
-# Convert the image to RGB if it's not already in that mode
-if img.mode != 'RGB':
-    img = img.convert('RGB')
+    # Detect faces in the image
+    boxes, _ = mtcnn.detect(img)
 
-# Get cropped and prewhitened image tensor
-boxes, _ = mtcnn.detect(img)
+    # To draw box on faces
+    draw = ImageDraw.Draw(img)
 
-# Create a copy of the original image to draw the boxes on
-draw_img = img.copy()
-draw = ImageDraw.Draw(draw_img)
+    # Apply mosaic to detected faces
+    if boxes is not None:
+        for box in boxes:
+            box = [int(i) for i in box]
+            img = apply_mosaic_section(img, box[0], box[1], box[2], box[3])
+            # draw.rectangle(box, outline=BOX_COLOR, width=THICKNESS)
 
-# Draw the boxes
-if boxes is not None:
-    for box in boxes:
-        box = box.tolist()
-        draw_img = apply_mosaic_section(draw_img, int(box[0]), int(box[1]), int(box[2]), int(box[3]))
-        #draw.rectangle(box, outline=BOX_COLOR, width=THICKNESS)
+    # Save and display the processed image
+    output_path = IMAGES_DIR + RESULT_IMAGE
+    img.save(output_path)
+    img.show()
 
-# Save and display the image
-draw_img.save('./images/test_result.jpg')
-draw_img.show()
+if __name__ == "__main__":
+    process_image(IMAGES_DIR + TEST_IMAGE)
