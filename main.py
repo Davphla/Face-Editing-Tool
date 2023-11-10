@@ -1,9 +1,9 @@
-
 # https://github.com/timesler/facenet-pytorch
 
 from facenet_pytorch import MTCNN, InceptionResnetV1
 from PIL import Image, ImageDraw
 from mosaic import apply_mosaic_section
+from config import BOX_COLOR, THICKNESS
 
 # If required, create a face detection pipeline using MTCNN:
 mtcnn = MTCNN(image_size=1024, margin=0)
@@ -25,19 +25,13 @@ boxes, _ = mtcnn.detect(img)
 draw_img = img.copy()
 draw = ImageDraw.Draw(draw_img)
 
-# Define box color and thickness
-box_color = 'green'
-thickness = 2
-
 # Draw the boxes
 if boxes is not None:
     for box in boxes:
-        # Instead of draw.rectangle, simply apply mosaic filter. 
-        # box.toList() contains the coordinates of the box
-        #draw.rectangle(box.tolist(), outline=box_color, width=thickness)
         box = box.tolist()
-        print(box)
         draw_img = apply_mosaic_section(draw_img, int(box[0]), int(box[1]), int(box[2]), int(box[3]))
+        #draw.rectangle(box, outline=BOX_COLOR, width=THICKNESS)
+
 # Save and display the image
-draw_img.save('./images/test_with_boxes.jpg')
+draw_img.save('./images/test_result.jpg')
 draw_img.show()
