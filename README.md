@@ -7,5 +7,6 @@ This is a simple tool for censoring faces in images. It is written in Python and
 ## TODO
 
 - [x] Face Detection
-- [x] Mosaic
+- [ ] Detect Emotion
+- [ ] Change face
 - [ ] GUI
