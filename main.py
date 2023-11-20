@@ -2,7 +2,8 @@
 from facenet_pytorch import MTCNN, InceptionResnetV1
 from PIL import Image, ImageDraw
 from mosaic import apply_mosaic_section
-from config import BOX_COLOR, THICKNESS, IMAGES_DIR, TEST_IMAGE, RESULT_IMAGE
+from config import BOX_COLOR, THICKNESS, IMAGES_DIR, TEST_IMAGE
+from make_smile import make_smile
 
 # Initialize MTCNN and InceptionResnetV1
 mtcnn = MTCNN(image_size=1024, margin=0)
@@ -30,9 +31,11 @@ def process_image(image_path):
             # draw.rectangle(box, outline=BOX_COLOR, width=THICKNESS)
 
     # Save and display the processed image
-    output_path = IMAGES_DIR + RESULT_IMAGE
+    output_path = IMAGES_DIR + TEST_IMAGE + '_result.jpg'
     img.save(output_path)
     img.show()
 
 if __name__ == "__main__":
-    process_image(IMAGES_DIR + TEST_IMAGE)
+    #process_image(IMAGES_DIR + TEST_IMAGE)
+    make_smile(IMAGES_DIR + TEST_IMAGE)
+    
