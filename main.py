@@ -3,7 +3,7 @@ from facenet_pytorch import MTCNN, InceptionResnetV1
 from PIL import Image, ImageDraw
 from mosaic import apply_mosaic_section
 from config import BOX_COLOR, THICKNESS, IMAGES_DIR, TEST_IMAGE
-from make_smile import change_face
+from change_face import change_face
 
 # Initialize MTCNN and InceptionResnetV1
 mtcnn = MTCNN(image_size=1024, margin=0)
