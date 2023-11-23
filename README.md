@@ -14,3 +14,12 @@ Pipeline:
 - [ ] Reintroduce Face to Original Image
 
 - [ ] GUI
+
+
+## change_face() emotion selection:
+
+0: Big laugh
+1: Pouting
+2: Feel sad
+3: Smile
+100: Opening eyes
