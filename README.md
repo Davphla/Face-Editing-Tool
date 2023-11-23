@@ -6,7 +6,11 @@ This is a simple tool for censoring faces in images. It is written in Python and
 
 ## TODO
 
+Pipeline:
 - [x] Face Detection
-- [ ] Detect Emotion
-- [ ] Change face
+- [ ] Click on Face to Select (Front End)
+- [ ] Crop Selected Face
+- [x] Change Face to smile
+- [ ] Reintroduce Face to Original Image
+
 - [ ] GUI
