@@ -1,41 +1,23 @@
-# Importing necessary libraries
-from facenet_pytorch import MTCNN, InceptionResnetV1
-from PIL import Image, ImageDraw
-from mosaic import apply_mosaic_section
-from config import BOX_COLOR, THICKNESS, IMAGES_DIR, TEST_IMAGE
 from change_face import change_face
+from detect_face import detect_face, crop_face
+from config import IMAGES_DIR, TEST_IMAGE
 
-# Initialize MTCNN and InceptionResnetV1
-mtcnn = MTCNN(image_size=1024, margin=0)
-resnet = InceptionResnetV1(pretrained='vggface2').eval()
-
-def process_image(image_path):
-    # Open the image file
-    img = Image.open(image_path)
-
-    # Convert the image to RGB if it's not already in that mode
-    if img.mode != 'RGB':
-        img = img.convert('RGB')
-
-    # Detect faces in the image
-    boxes, _ = mtcnn.detect(img)
-
-    # To draw box on faces
-    draw = ImageDraw.Draw(img)
-
-    # Apply mosaic to detected faces
-    if boxes is not None:
-        for box in boxes:
-            box = [int(i) for i in box]
-            img = apply_mosaic_section(img, box[0], box[1], box[2], box[3])
-            # draw.rectangle(box, outline=BOX_COLOR, width=THICKNESS)
-
-    # Save and display the processed image
-    output_path = IMAGES_DIR + TEST_IMAGE + '_result.jpg'
-    img.save(output_path)
-    img.show()
+test_image_path = IMAGES_DIR + TEST_IMAGE
 
 if __name__ == "__main__":
-    #process_image(IMAGES_DIR + TEST_IMAGE)
-    change_face(IMAGES_DIR + TEST_IMAGE)
+    
+    img, boxes = detect_face(test_image_path)
+    # img is the original image
+    # boxes is the list of coordinates for each face in the image
+    
+    # create crops of each face
+    crops = crop_face(img, boxes)
+    
+    # change the emotion of each face
+    for crop in crops:
+        change_face(crop, 0)
+    
+    # TODO: stitch the faces back into the original image
+    # final_image = stich(img, crops)
+    # final_image.show()
     
