@@ -15,7 +15,7 @@ if __name__ == "__main__":
     
     # change the emotion of each face
     for crop in crops:
-        change_face(crop, 0)
+        change_face(crop, 0) # Uses API credits, beware
     
     # TODO: stitch the faces back into the original image
     # final_image = stich(img, crops)
