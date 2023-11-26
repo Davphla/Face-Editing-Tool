@@ -46,19 +46,11 @@ def detect_face(image_path):
 def crop_face(image_path, boxes):
     # Open the image file
     img = Image.open(image_path)
-    filename = img.filename.split(os.path.sep)[-1]
-    extension = img.filename.split('.')[-1]
+    filename = os.path.basename(image_path)
+    extension = os.path.splitext(image_path)[1][1:]
     if img.mode != 'RGB':
         img = img.convert('RGB')
 
-    # =======
-    # def crop_face(img_path, boxes):
-    #     img = Image.open(img_path)
-    #     if img.mode != 'RGB':
-    #         img = img.convert('RGB')
-    #     filename = os.path.basename(img_path)
-    #     extension = os.path.splitext(img_path)[1][1:]
-    # >>>>>>> a10b47a1a81ca8f1d4463c69093dc589b73422be
     crops = []
     if boxes is not None:
         for j, box in enumerate(boxes):
