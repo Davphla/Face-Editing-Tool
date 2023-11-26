@@ -14,3 +14,9 @@ def apply_mosaic_section(image, x1, y1, x2, y2):
         for y in range(y1, y2, TILE_SIZE):
             apply_tile_average(image, x, y, TILE_SIZE)
     return image
+
+def apply_mosaic(image_path):
+    image = Image.open(image_path)
+    apply_mosaic_section(image, 0, 0, image.width, image.height)
+    image.save(image_path)
+    return image_path
