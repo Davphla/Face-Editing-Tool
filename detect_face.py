@@ -42,12 +42,14 @@ def detect_face(image_path):
 print()
 
 
-def crop_face(img: Image, boxes):
+def crop_face(img_path, boxes):
+    img = Image.open(img_path)
     if img.mode != 'RGB':
         img = img.convert('RGB')
-    filename = img.filename.split('\\')[-1]
-    print(filename)
-    extension = img.filename.split('.')[-1]
+    #filename = img.filename.split('\\')[-1]
+    filename = os.path.basename(img_path)
+    #extension = img.filename.split('.')[-1]
+    extension = os.path.splitext(img_path)[1][1:]
     crops = []
     images_dir = []
     if boxes is not None:
@@ -69,3 +71,18 @@ def crop_face(img: Image, boxes):
 # print(boxes)
 # print(orig_img.filename)
 # print(crop_face(orig_img, boxes))
+
+
+def stitch(orig_img, crops, boxes):
+    orig_img = Image.open(orig_img)
+    if orig_img.mode != 'RGB':
+        orig_img = orig_img.convert('RGB')
+    boxes = boxes.tolist()
+    for i, box in enumerate(boxes):
+        box = [int(i) for i in box]
+        cropped_img = Image.open(crops[i])
+        if cropped_img.mode != 'RGB':
+            cropped_img = cropped_img.convert('RGB')
+        orig_img.paste(cropped_img, box)
+    orig_img.save("./images/stitched.jpg")
+    return "stitched.jpg"
