@@ -1,10 +1,11 @@
 import json
 
 import numpy
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, jsonify
 from PIL import Image, ImageDraw
 from detect_face import *
 import os
+import uuid
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -14,7 +15,7 @@ CORS(app)
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024
 
 # allowed extension
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 
 def allowed_file(filename):
@@ -50,6 +51,10 @@ def upload():
     if not allowed_file(file.filename):
         return "Not Allowed file extension"
 
+    # get extension
+    print(file.filename)
+    extension = file.filename.split('.')[-1]
+
     print("Got It")
     if file:
         # upload path
@@ -57,28 +62,38 @@ def upload():
         if not os.path.exists(upload_folder):
             os.makedirs(upload_folder)
 
-        file_path = os.path.join(upload_folder, file.filename)
-        # todo: change something like hash path
+        # set file_id to uuid
+        file_id = str(uuid.uuid1())
+        file_path = os.path.join(upload_folder, file_id + "." + extension)
+        print(file_path)
         file.save(file_path)
         boxes = detect_face(file_path)
-        print(boxes)
 
-        # img.filename = file_path
         images_dir = crop_face(file_path, boxes)
-
-        encoded_img = get_response_image(file_path)
+        encoded_img = get_response_image(draw_rectangles(file_path, boxes), extension)
         return {
             "crop_images_dir": images_dir,
             "boxes": boxes.tolist(),
-            "Image": encoded_img
-
+            "Image": encoded_img,
+            "id": file_id
         }
-        # return send_file(file_path, as_attachment=True)
-        # do mosaic or something func
-        # mosaic_image_path = apply_mosaic(file_path)
 
-        # 결과 파일을 클라이언트에게 전송
-        # return send_file(mosaic_image_path, as_attachment=True)
+
+@app.route('/change/<file_id>', methods=['POST'])
+def change(file_id: str):
+    try:
+        # request에서 JSON 데이터 추출
+        data = request.get_json()
+        print(data)
+        # 받은 데이터를 가공하거나 사용
+        if data:
+            message = data.get('message', 'No message provided')
+            return jsonify({"success": True, "message": f"Received message: {message}"})
+        else:
+            return jsonify({"success": False, "error": "No JSON data received"})
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
 
 
 if __name__ == '__main__':

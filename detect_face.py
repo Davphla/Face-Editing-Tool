@@ -43,11 +43,13 @@ def detect_face(image_path):
     return boxes
 
 
-def crop_face(image_path, boxes):
+def crop_face(file_path, boxes):
+    print(file_path)
     # Open the image file
-    img = Image.open(image_path)
-    filename = os.path.basename(image_path)
-    extension = os.path.splitext(image_path)[1][1:]
+    img = Image.open(file_path)
+    filename = img.filename.split(os.path.sep)[-1]
+    print(filename)
+    extension = img.filename.split('.')[-1]
     if img.mode != 'RGB':
         img = img.convert('RGB')
 
@@ -65,27 +67,30 @@ def crop_face(image_path, boxes):
     return crops
 
 
-def draw_rectangles(img: Image, rectangles, output_path):
+# draw
+def draw_rectangles(image_path, rectangles) -> Image:
     # 이미지 열기
-    # img = Image.open(image_path)
+    img = Image.open(image_path)
 
     # ImageDraw 객체 생성
     draw = ImageDraw.Draw(img)
+    rectangles = rectangles.tolist()
+    # draw rectangle
+    for i, rectangle in enumerate(rectangles):
+        # # points [(x1, y1), (x2, y2)] 형태
+        # points = [(rectangle[0:2]), (rectangle[2:4])]
+        # print(points)
+        draw.rectangle(rectangle, outline="red", width=2)
 
-    # 각 좌표 쌍에 대해 네모 그리기
-    for rectangle in rectangles:
-        # rectangle은 [(x1, y1), (x2, y2)] 형태
-        points = (rectangle[0:2], rectangle[2:4])
-        draw.rectangle(points, outline="red", width=2)
-
-    # 결과 이미지 저장
-    img.save(output_path)
+    # save result
+    return img
 
 
-def get_response_image(image_path):
-    pil_img = Image.open(image_path, mode='r')  # reads the PIL image
+def get_response_image(img: Image, extension):
+    # pil_img = Image.open(image_path, mode='r')  # reads the PIL image
+
     byte_arr = io.BytesIO()
-    pil_img.save(byte_arr, format='PNG')  # convert the PIL image to byte array
+    img.save(byte_arr, format=f'{extension}')  # convert the PIL image to byte array, PNG, JPG
     encoded_img = encodebytes(byte_arr.getvalue()).decode('ascii')  # encode as base64
     return encoded_img
 
@@ -97,15 +102,19 @@ def stitch(image_path, crops_dir, boxes):
         # Ensure the box values are integers
         box = tuple(int(j) for j in box)
         # Resize the cropped image to match the box dimensions
-        if cropped_img.size != (box[2]-box[0], box[3]-box[1]):
-            cropped_img = cropped_img.resize((box[2]-box[0], box[3]-box[1]))
+        if cropped_img.size != (box[2] - box[0], box[3] - box[1]):
+            cropped_img = cropped_img.resize((box[2] - box[0], box[3] - box[1]))
         orig_img.paste(cropped_img, box)
     if orig_img.mode != 'RGB':
         orig_img = orig_img.convert('RGB')
     orig_img.save(f"{IMAGES_DIR}/final.jpg")
     return f"{IMAGES_DIR}/final.jpg"
 
+
 # boxes = detect_face("uploads\Crowd-of-Diverse-People_800x528.jpg")
+# img = Image.open("uploads\Crowd-of-Diverse-People_800x528.jpg")
+# draw_rectangles(img, boxes).show()
+
 # print(orig_img)
 # print(boxes)
 # print(boxes)
