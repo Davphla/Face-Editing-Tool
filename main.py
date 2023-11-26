@@ -3,6 +3,7 @@ from detect_face import detect_face, crop_face, stitch
 from mosaic import apply_mosaic
 from config import IMAGES_DIR, TEST_IMAGE
 from PIL import Image
+import os
 
 test_image_path = IMAGES_DIR + TEST_IMAGE
 
@@ -23,6 +24,10 @@ def make_smile(image_path):
     
     # Stitch the faces back into the original image
     final_image_dir = stitch(image_path, crops_dir, boxes)
+    
+    # Delete crops
+    for crop in crops_dir:
+        os.remove(crop)
     
     final_image = Image.open(final_image_dir)
     final_image.show()
