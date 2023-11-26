@@ -51,14 +51,14 @@ def crop_face(image_path, boxes):
     if img.mode != 'RGB':
         img = img.convert('RGB')
 
-# =======
-# def crop_face(img_path, boxes):
-#     img = Image.open(img_path)
-#     if img.mode != 'RGB':
-#         img = img.convert('RGB')
-#     filename = os.path.basename(img_path)
-#     extension = os.path.splitext(img_path)[1][1:]
-# >>>>>>> a10b47a1a81ca8f1d4463c69093dc589b73422be
+    # =======
+    # def crop_face(img_path, boxes):
+    #     img = Image.open(img_path)
+    #     if img.mode != 'RGB':
+    #         img = img.convert('RGB')
+    #     filename = os.path.basename(img_path)
+    #     extension = os.path.splitext(img_path)[1][1:]
+    # >>>>>>> a10b47a1a81ca8f1d4463c69093dc589b73422be
     crops = []
     images_dir = []
     if boxes is not None:
@@ -91,11 +91,12 @@ def draw_rectangles(img: Image, rectangles, output_path):
     # 결과 이미지 저장
     img.save(output_path)
 
+
 def get_response_image(image_path):
-    pil_img = Image.open(image_path, mode='r') # reads the PIL image
+    pil_img = Image.open(image_path, mode='r')  # reads the PIL image
     byte_arr = io.BytesIO()
-    pil_img.save(byte_arr, format='PNG') # convert the PIL image to byte array
-    encoded_img = encodebytes(byte_arr.getvalue()).decode('ascii') # encode as base64
+    pil_img.save(byte_arr, format='PNG')  # convert the PIL image to byte array
+    encoded_img = encodebytes(byte_arr.getvalue()).decode('ascii')  # encode as base64
     return encoded_img
 
 
@@ -112,6 +113,7 @@ def stitch_bad(orig_img, crops, boxes):
     orig_img.save("images/stitched.jpg")
     return "images/stitched.jpg"
 
+
 def stitch(image_path, images_dir, boxes):
     orig_img = Image.open(image_path)
     for i, box in enumerate(boxes):
@@ -122,7 +124,9 @@ def stitch(image_path, images_dir, boxes):
     orig_img.save(f"{images_dir}/final.jpg")
     return f"{images_dir}/final.jpg"
 
-# orig_img, boxes = detect_face("uploads\Crowd-of-Diverse-People_800x528.jpg")
+# boxes = detect_face("uploads\Crowd-of-Diverse-People_800x528.jpg")
+# print(orig_img)
+# print(boxes)
 # print(boxes)
 # print(orig_img.filename)
 # print(crop_face(orig_img, boxes))

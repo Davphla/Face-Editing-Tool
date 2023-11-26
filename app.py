@@ -60,7 +60,7 @@ def upload():
         file_path = os.path.join(upload_folder, file.filename)
         # todo: change something like hash path
         file.save(file_path)
-        img, boxes = detect_face(file_path)
+        boxes = detect_face(file_path)
         print(boxes)
 
         # img.filename = file_path
