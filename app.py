@@ -28,6 +28,7 @@ def index():
     return "Hello World"
 
 
+# return cropped image dir and coordinates
 @app.route('/upload', methods=['POST'])
 def upload():
     # upload type / multipart/form-data
@@ -57,9 +58,12 @@ def upload():
 
         # todo: change something like hash path
         file.save(file_path)
+        print(file_path)
         img, boxes = detect_face(file_path)
-        # crop_face(img, boxes)
+
+        _, images_dir = crop_face(img, boxes)
         return {
+            "crop_images_dir": images_dir,
             "boxes": json.dumps(boxes.tolist())
         }
         # return send_file(file_path, as_attachment=True)

@@ -45,7 +45,8 @@ print()
 def crop_face(img: Image, boxes):
     if img.mode != 'RGB':
         img = img.convert('RGB')
-    filename = img.filename.split('/')[-1]
+    filename = img.filename.split('\\')[-1]
+    print(filename)
     extension = img.filename.split('.')[-1]
     crops = []
     images_dir = []
@@ -64,7 +65,7 @@ def crop_face(img: Image, boxes):
     return crops, images_dir
 
 
-# orig_img, boxes = detect_face("uploads/Crowd-of-Diverse-People_800x528.jpg")
+# orig_img, boxes = detect_face("uploads\Crowd-of-Diverse-People_800x528.jpg")
 # print(boxes)
 # print(orig_img.filename)
 # print(crop_face(orig_img, boxes))
