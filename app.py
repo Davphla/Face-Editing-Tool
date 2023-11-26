@@ -5,8 +5,10 @@ from flask import Flask, render_template, request, send_file
 from PIL import Image, ImageDraw
 from detect_face import *
 import os
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 # set 16MB
 # app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024
@@ -32,11 +34,11 @@ def index():
 @app.route('/upload', methods=['POST'])
 def upload():
     # upload type / multipart/form-data
-    if 'image' not in request.files:
+    if 'file' not in request.files:
         return "No file part"
-
-    file = request.files['image']
-
+    # print(request.files)
+    file = request.files['file']
+    # print(file.filename)
     if file.filename == '':
         return "No selected file"
 
@@ -48,6 +50,7 @@ def upload():
     if not allowed_file(file.filename):
         return "Not Allowed file extension"
 
+    print("Got It")
     if file:
         # upload path
         upload_folder = 'uploads'
@@ -55,16 +58,20 @@ def upload():
             os.makedirs(upload_folder)
 
         file_path = os.path.join(upload_folder, file.filename)
-
         # todo: change something like hash path
         file.save(file_path)
-        print(file_path)
         img, boxes = detect_face(file_path)
+        print(boxes)
 
-        _, images_dir = crop_face(img, boxes)
+        # img.filename = file_path
+        _, images_dir = crop_face(file_path, boxes)
+
+        encoded_img = get_response_image(file_path)
         return {
             "crop_images_dir": images_dir,
-            "boxes": json.dumps(boxes.tolist())
+            "boxes": boxes.tolist(),
+            "Image": encoded_img
+
         }
         # return send_file(file_path, as_attachment=True)
         # do mosaic or something func
