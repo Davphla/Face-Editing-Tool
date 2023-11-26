@@ -1,5 +1,9 @@
+import json
+
+import numpy
 from flask import Flask, render_template, request, send_file
 from PIL import Image, ImageDraw
+from detect_face import *
 import os
 
 app = Flask(__name__)
@@ -53,27 +57,17 @@ def upload():
 
         # todo: change something like hash path
         file.save(file_path)
-        return send_file(file_path, as_attachment=True)
+        img, boxes = detect_face(file_path)
+        # crop_face(img, boxes)
+        return {
+            "boxes": json.dumps(boxes.tolist())
+        }
+        # return send_file(file_path, as_attachment=True)
         # do mosaic or something func
         # mosaic_image_path = apply_mosaic(file_path)
 
         # 결과 파일을 클라이언트에게 전송
         # return send_file(mosaic_image_path, as_attachment=True)
-
-
-def apply_mosaic(image_path):
-    # 이미지 열기
-    img = Image.open(image_path)
-
-    # 모자이크 처리
-    img = img.resize((img.width // 10, img.height // 10), Image.NEAREST)
-    img = img.resize((img.width * 10, img.height * 10), Image.NEAREST)
-
-    # 모자이크된 이미지 저장
-    mosaic_path = 'mosaic_' + os.path.basename(image_path)
-    img.save(os.path.join('uploads', mosaic_path))
-
-    return os.path.join('uploads', mosaic_path)
 
 
 if __name__ == '__main__':
