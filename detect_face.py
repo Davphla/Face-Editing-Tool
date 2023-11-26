@@ -22,7 +22,7 @@ def detect_face(image_path):
     # Detect faces in the image
     boxes, _ = mtcnn.detect(img)
 
-    # To draw box on faces
+    # To draw box on faces  
     # draw = ImageDraw.Draw(img)
 
     # Apply mosaic to detected faces
@@ -36,10 +36,7 @@ def detect_face(image_path):
     # output_path = IMAGES_DIR + TEST_IMAGE + '_result.jpg'
     # img.save(output_path)
 
-    return img, boxes
-
-
-print()
+    return boxes
 
 
 def crop_face(img_path, boxes):
@@ -54,7 +51,6 @@ def crop_face(img_path, boxes):
     images_dir = []
     if boxes is not None:
         for j, box in enumerate(boxes):
-            box = [int(i) for i in box]
             cropped_img = img.crop(box)
             if not os.path.exists(f"crop/{filename}"):
                 os.makedirs(f"crop/{filename}")
@@ -67,22 +63,30 @@ def crop_face(img_path, boxes):
     return crops, images_dir
 
 
-# orig_img, boxes = detect_face("uploads\Crowd-of-Diverse-People_800x528.jpg")
-# print(boxes)
-# print(orig_img.filename)
-# print(crop_face(orig_img, boxes))
-
-
-def stitch(orig_img, crops, boxes):
+def stitch_bad(orig_img, crops, boxes):
     orig_img = Image.open(orig_img)
     if orig_img.mode != 'RGB':
         orig_img = orig_img.convert('RGB')
     boxes = boxes.tolist()
     for i, box in enumerate(boxes):
-        box = [int(i) for i in box]
         cropped_img = Image.open(crops[i])
         if cropped_img.mode != 'RGB':
             cropped_img = cropped_img.convert('RGB')
         orig_img.paste(cropped_img, box)
-    orig_img.save("./images/stitched.jpg")
-    return "stitched.jpg"
+    orig_img.save("images/stitched.jpg")
+    return "images/stitched.jpg"
+
+def stitch(image_path, images_dir, boxes):
+    orig_img = Image.open(image_path)
+    for i, box in enumerate(boxes):
+        cropped_img = Image.open(f"{images_dir}/crop_{i}.jpg")
+        # Ensure the box values are integers
+        box = tuple(int(b) for b in box)
+        orig_img.paste(cropped_img, box)
+    orig_img.save(f"{images_dir}/final.jpg")
+    return f"{images_dir}/final.jpg"
+
+# orig_img, boxes = detect_face("uploads\Crowd-of-Diverse-People_800x528.jpg")
+# print(boxes)
+# print(orig_img.filename)
+# print(crop_face(orig_img, boxes))
