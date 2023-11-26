@@ -16,7 +16,7 @@ def make_smile(image_path):
     
     # change the emotion of each face
     #for crop in images_dir_crops:
-        #change_face(crop, 0) # Uses API credits, beware
+        #change_emotion(crop, 0) # Uses API credits, beware
     
     # Stitch the faces back into the original image
     final_image_dir = stitch(image_path, images_dir_crops, boxes)
