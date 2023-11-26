@@ -64,7 +64,7 @@ def upload():
         print(boxes)
 
         # img.filename = file_path
-        _, images_dir = crop_face(file_path, boxes)
+        images_dir = crop_face(file_path, boxes)
 
         encoded_img = get_response_image(file_path)
         return {
