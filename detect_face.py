@@ -1,11 +1,14 @@
 # Importing necessary libraries
 import io
 import json
+import shutil
 from base64 import encodebytes
 
 from facenet_pytorch import MTCNN, InceptionResnetV1
 from PIL import Image, ImageDraw
-from mosaic import apply_mosaic_section
+
+from change_face import change_emotion_fake
+from mosaic import apply_mosaic_section, apply_mosaic
 from config import BOX_COLOR, THICKNESS, IMAGES_DIR, TEST_IMAGE, CROP_DIR
 
 import os
@@ -110,6 +113,37 @@ def stitch(image_path, crops_dir, boxes):
     orig_img.save(f"{IMAGES_DIR}/final.jpg")
     return f"{IMAGES_DIR}/final.jpg"
 
+
+def overwrite_image(infos: list, file_id: str):
+    crops_dir = []
+    boxes = []
+    file_id = file_id + ".png"
+    for x in infos:
+        # first make image path
+        # original image path is upload\file_id
+        crop_dir = f"crop\\{file_id}\\{file_id}_cropped_{x['number']}.png"
+        crops_dir.append(crop_dir)  # append all crops dir
+        number = x["number"]
+        boxes.append(x["box"])
+        change: str = x["change"]
+        if change == "mosaic":
+            apply_mosaic(f"uploads\\{file_id}")
+        else:
+            change_emotion_fake(crop_dir, change)
+    image_path = f"uploads\\{file_id}"
+    final_image_dir = stitch(image_path, crops_dir, boxes)
+    try:
+        # shutil.rmtree() 함수를 사용하여 디렉토리 및 하위 항목 삭제
+        shutil.rmtree(f"crop\\{file_id}")
+        print(f"디렉토리가 삭제되었습니다.")
+    except Exception as e:
+        print(f"디렉토리 삭제 중 오류가 발생했습니다: {e}")
+    # for crop in crops_dir:
+    #     os.remove(crop)
+
+    final_image = Image.open(final_image_dir)
+    final_image.show()
+    return {"change": get_response_image(final_image, "png")}
 
 # boxes = detect_face("uploads\Crowd-of-Diverse-People_800x528.jpg")
 # img = Image.open("uploads\Crowd-of-Diverse-People_800x528.jpg")

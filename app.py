@@ -81,19 +81,12 @@ def upload():
 
 @app.route('/change/<file_id>', methods=['POST'])
 def change(file_id: str):
-    try:
-        # request에서 JSON 데이터 추출
-        data = request.get_json()
-        print(data)
-        # 받은 데이터를 가공하거나 사용
-        if data:
-            message = data.get('message', 'No message provided')
-            return jsonify({"success": True, "message": f"Received message: {message}"})
-        else:
-            return jsonify({"success": False, "error": "No JSON data received"})
 
-    except Exception as e:
-        return jsonify({"success": False, "error": str(e)})
+    # request에서 JSON 데이터 추출
+    data = request.get_json()
+    print(data)
+    return overwrite_image(data, file_id)
+
 
 
 if __name__ == '__main__':
