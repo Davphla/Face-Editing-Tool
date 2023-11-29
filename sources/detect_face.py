@@ -8,7 +8,7 @@ from facenet_pytorch import MTCNN, InceptionResnetV1
 from PIL import Image, ImageDraw
 
 from change_face import change_emotion_fake
-from mosaic import apply_mosaic_section, apply_mosaic
+from filters.mosaic import apply_mosaic_section, apply_mosaic
 from config import BOX_COLOR, THICKNESS, IMAGES_DIR, TEST_IMAGE, CROP_DIR
 
 import os
@@ -99,6 +99,8 @@ def get_response_image(img: Image, extension):
 
 
 def stitch(image_path, crops_dir, boxes):
+    print("call stitch")
+    print(boxes)
     orig_img = Image.open(image_path)
     for i, box in enumerate(boxes):
         cropped_img = Image.open(crops_dir[i])
@@ -115,6 +117,7 @@ def stitch(image_path, crops_dir, boxes):
 
 
 def overwrite_image(infos: list, file_id: str):
+    print("call overwrite image")
     crops_dir = []
     boxes = []
     file_id = file_id + ".png"
@@ -131,6 +134,7 @@ def overwrite_image(infos: list, file_id: str):
         else:
             change_emotion_fake(crop_dir, change)
     image_path = f"uploads\\{file_id}"
+    print(boxes)
     final_image_dir = stitch(image_path, crops_dir, boxes)
     try:
         # shutil.rmtree() 함수를 사용하여 디렉토리 및 하위 항목 삭제
