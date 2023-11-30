@@ -130,7 +130,7 @@ def overwrite_image(infos: list, file_id: str):
         boxes.append(x["box"])
         change: str = x["change"]
         if change == "mosaic":
-            apply_mosaic(f"uploads\\{file_id}")
+            apply_mosaic(crop_dir)
         else:
             change_emotion_fake(crop_dir, change)
     image_path = f"uploads\\{file_id}"
