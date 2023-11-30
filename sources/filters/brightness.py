@@ -2,7 +2,7 @@ from PIL import Image, ImageEnhance
 
 
 
-def apply_brightness(image_path, brightness_factor):
+def apply_brightness(image_path, brightness_factor = 1.5):
     # Open the image file
     image = Image.open(image_path)
 
