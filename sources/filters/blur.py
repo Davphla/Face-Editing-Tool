@@ -1,7 +1,7 @@
 from PIL import Image
 import numpy as np
 
-def blur(image_path):
+def apply_blur(image_path):
     image = Image.open(image_path)
     img_array = np.array(image)
     

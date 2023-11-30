@@ -13,6 +13,9 @@ from config import BOX_COLOR, THICKNESS, IMAGES_DIR, TEST_IMAGE, CROP_DIR
 
 import os
 
+from sources.filters.blur import apply_blur
+from sources.filters.brightness import apply_brightness
+
 # Initialize MTCNN and InceptionResnetV1
 mtcnn = MTCNN(image_size=1024, margin=0)
 resnet = InceptionResnetV1(pretrained='vggface2').eval()
@@ -131,6 +134,10 @@ def overwrite_image(infos: list, file_id: str):
         change: str = x["change"]
         if change == "mosaic":
             apply_mosaic(crop_dir)
+        elif change == "brightness":
+            apply_brightness(crop_dir)
+        elif change == "blur":
+            apply_blur(crop_dir)
         else:
             change_emotion_fake(crop_dir, change)
     image_path = f"uploads\\{file_id}"
@@ -139,7 +146,7 @@ def overwrite_image(infos: list, file_id: str):
     try:
         # shutil.rmtree() 함수를 사용하여 디렉토리 및 하위 항목 삭제
         shutil.rmtree(f"crop\\{file_id}")
-        print(f"디렉토리가 삭제되었습니다.")
+        print(f"delete directory")
     except Exception as e:
         print(f"디렉토리 삭제 중 오류가 발생했습니다: {e}")
     # for crop in crops_dir:
