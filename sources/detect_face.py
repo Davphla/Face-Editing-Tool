@@ -87,7 +87,19 @@ def draw_rectangles(image_path, rectangles) -> Image:
         # points = [(rectangle[0:2]), (rectangle[2:4])]
         # print(points)
         draw.rectangle(rectangle, outline="red", width=2)
-
+        # change size of text depending on the size of the rectangle
+        size = int((rectangle[2]-rectangle[0])*0.1)
+        text_positions = [
+            (rectangle[0] + int((rectangle[2]-rectangle[0])*0.05), rectangle[1] - int((rectangle[1]-rectangle[3])*0.03)),
+            (rectangle[0] + int((rectangle[2]-rectangle[0])*0.05), rectangle[3] + int((rectangle[1]-rectangle[3])*0.11)),
+            (rectangle[2] - int((rectangle[2]-rectangle[0])*0.11), rectangle[1] - int((rectangle[1]-rectangle[3])*0.03)),
+            (rectangle[2] - int((rectangle[2]-rectangle[0])*0.11), rectangle[3] + int((rectangle[1]-rectangle[3])*0.11))
+        ]
+        for position in text_positions:
+            draw.text(position, # Position, tuple of x y
+                      text=f"{i}", 
+                      fill="red", 
+                      font_size=size)
     # save result
     return img
 
