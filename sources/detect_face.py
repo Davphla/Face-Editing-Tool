@@ -7,14 +7,14 @@ from base64 import encodebytes
 from facenet_pytorch import MTCNN, InceptionResnetV1
 from PIL import Image, ImageDraw
 
-from change_face import change_emotion_fake
+from change_face import change_emotion_fake, change_emotion
 from filters.mosaic import apply_mosaic_section, apply_mosaic
 from config import BOX_COLOR, THICKNESS, IMAGES_DIR, TEST_IMAGE, CROP_DIR
 
 import os
 
-from sources.filters.blur import apply_blur
-from sources.filters.brightness import apply_brightness
+from filters.blur import apply_blur
+from filters.brightness import apply_brightness
 
 # Initialize MTCNN and InceptionResnetV1
 mtcnn = MTCNN(image_size=1024, margin=0)
@@ -139,7 +139,7 @@ def overwrite_image(infos: list, file_id: str):
         elif change == "blur":
             apply_blur(crop_dir)
         else:
-            change_emotion_fake(crop_dir, change)
+            change_emotion(crop_dir, change)
     image_path = f"uploads\\{file_id}"
     print(boxes)
     final_image_dir = stitch(image_path, crops_dir, boxes)
@@ -153,7 +153,7 @@ def overwrite_image(infos: list, file_id: str):
     #     os.remove(crop)
 
     final_image = Image.open(final_image_dir)
-    final_image.show()
+    # final_image.show()
     return {"change": get_response_image(final_image, "png")}
 
 # boxes = detect_face("uploads\Crowd-of-Diverse-People_800x528.jpg")
