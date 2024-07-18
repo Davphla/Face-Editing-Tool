@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is a simple tool for censoring faces in images. It is written in Python and uses facenet for Face Detection, PIL for image I/O, and our own mosaic function.
+This is a simple tool for applying filter on faces in images. It is written in Python and uses facenet for Face Detection, PIL for image I/O, and our own mosaic function.
 
 
 ## How to Use
