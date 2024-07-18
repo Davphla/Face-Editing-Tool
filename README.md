@@ -27,14 +27,3 @@ you can see that server is running on http://localhost:5000.
 ### /upload
 ### /change
 
-
-## TODO
-
-Pipeline:
-- [x] Face Detection
-- [ ] Click on Face to Select (Front End)
-- [x] Crop Selected Face
-- [x] Change Face to smile
-- [x] Reintroduce Face to Original Image
-
-- [ ] GUI
